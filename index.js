@@ -82,15 +82,25 @@ class Car {
 	}
 	fill(gallons) {
 		this.tank += gallons;
+		// console.log(`Filling the Tank: adding ${gallons} gallons, total of ${this.tank}. I've got ${this.milesPerGallon} MPG`;
 	}
 	drive(distance) {
-		// this.odometer += distance;
-		while (this.tank > 0) {
+		// there IS enough gas
+		if (this.tank * this.milesPerGallon > distance) {
 			this.odometer += distance;
-			this.tank -= distance / this.milesPerGallon;
-			return;
+			this.tank = this.tank - distance / this.milesPerGallon;
+
+			// console.log(`MPG: ${this.milesPerGallon}, Made it fine - Tank: ${this.tank}. I've got ${this.milesPerGallon} MPG`);
+			// console.log(`Made it fine - Tank: ${this.tank}`);
 		}
-		return `I ran out of fuel at ${this.odometer} miles!`;
+		// theres NOT enough gas
+		else {
+			this.odometer = this.odometer + this.tank * this.milesPerGallon;
+			this.tank = 0;
+
+			// console.log(`I ran out of fuel at ${this.odometer} miles! Tank: ${this.tank}`);
+			return `I ran out of fuel at ${this.odometer} miles!`;
+		}
 	}
 }
 
@@ -107,11 +117,6 @@ class Car {
           + {name} and {location} of course come from the instance's own properties.
   */
 class Lambdasian {
-	// constructor({ name, age, location }) {
-	// 	this.name = name;
-	// 	this.age = age;
-	// 	this.location = location;
-	// }
 	constructor(attributes) {
 		this.name = attributes.name;
 		this.age = attributes.age;
@@ -173,7 +178,15 @@ class Student extends Lambdasian {
 		this.favSubjects = studentAttrs.favSubjects;
 	}
 	listSubjects() {
-		// return `Loving ${}, ${}, ${},!`;
+		let statement = `Loving `;
+		this.favSubjects.forEach(subject => {
+			statement = statement + `${subject}`;
+			if (subject !== this.favSubjects[this.favSubjects.length - 1]) {
+				statement = statement + `, `;
+			}
+		});
+		statement += `!`;
+		return statement;
 	}
 	PRAssignment(subject) {
 		return `${this.name} has submitted a PR for ${subject}`;
